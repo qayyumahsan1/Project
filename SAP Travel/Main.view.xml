@@ -1,0 +1,13 @@
+<!--
+
+    Copyright (C) 2009-2014 SAP SE or an SAP affiliate company. All rights reserved
+
+-->
+<core:View controllerName="travel.request.create.Main"
+	xmlns:core="sap.ui.core"
+	xmlns="sap.m"
+	displayBlock="true"
+	height="100%">
+	<NavContainer id="fioriContent">
+	</NavContainer>
+</core:View>
