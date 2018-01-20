@@ -1,0 +1,51 @@
+<!--
+
+    Copyright (C) 2009-2014 SAP SE or an SAP affiliate company. All rights reserved
+
+-->
+<core:View
+	controllerName="travel.request.create.view.Master"
+	xmlns:core="sap.ui.core"
+	xmlns="sap.m">
+	<Page
+		id="page"
+		title="{i18n>MASTER_TITLE}">
+		<content>
+			<List
+				id="list"				
+				mode="{device>/listMode}"
+				select="_handleSelect"
+				growing="true"
+				items="{path:'/Travels', sorter:[{path:'LastChangeDate', descending : true}]}"
+				growingThreshold="20">
+				<ObjectListItem
+					id="MAIN_LIST_ITEM"
+					type="{device>/listItemType}"
+					title="{Purpose}"
+					number="{path:'EstimatedCost/Value', type:'sap.ui.model.type.Float', formatOptions:{groupingEnabled:true}}"
+					numberUnit="{EstimatedCost/Currency}"
+					press="_handleItemPress">
+					<attributes>
+						<ObjectAttribute
+							id="ATTR1"
+							text="{parts:[{path:'Location'},{path:'CountryName'}], formatter:'travel.request.create.util.Formatters.formatDestination'}" />
+						<ObjectAttribute
+							id="ATTR2"
+							text="{parts:[{path:'Departure'},{path:'Arrival'}], formatter:'travel.request.create.util.Formatters.formatDepartureArrival'}" />
+					</attributes>
+					<firstStatus>
+						<ObjectStatus
+							text="{path:'Status', formatter:'travel.request.create.util.Formatters.translateStatus'}"
+							state="{path:'Status', formatter:'travel.request.create.util.Formatters.formatStatus'}"></ObjectStatus>
+					</firstStatus>
+				</ObjectListItem>
+			</List>
+		</content>
+
+		<footer>
+			<Bar id="footer">
+
+			</Bar>
+		</footer>
+	</Page>
+</core:View>

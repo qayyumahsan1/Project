@@ -1,0 +1,472 @@
+<!--
+
+    Copyright (C) 2009-2014 SAP SE or an SAP affiliate company. All rights reserved
+
+-->
+<core:View
+	controllerName="travel.request.create.view.DetailForm"
+	xmlns:core="sap.ui.core"
+	xmlns="sap.m"
+	xmlns:l="sap.ui.layout"
+	xmlns:f="sap.ui.layout.form"
+	xmlns:caui="sap.ca.ui">
+	<Page
+		id="TRC_NEW_PAGE"
+		class="sapUiFioriObjectPage">
+		<content>
+			<l:Grid
+				defaultSpan="L12 M12 S12"
+				width="auto">
+				<l:content>
+					<f:SimpleForm
+						id="oTravelSimpleForm"
+						maxContainerCols="1"
+						editable="true"
+						layout="ResponsiveGridLayout"
+						title="{i18n>TRC_TRIP_DETAIL}"
+						class="editableForm">
+						<f:content>
+							<l:Grid
+								defaultSpan="L12 M12 S12"
+								minWidth="1024">
+								<l:content>
+									<f:Form
+										id="oTravelForm"
+										class="editableForm">
+										<f:layout>
+											<f:ResponsiveGridLayout
+												labelSpanL="3"
+												labelSpanM="3"
+												emptySpanL="4"
+												emptySpanM="4"
+												columnsL="1"
+												columnsM="1" />
+										</f:layout>
+										<f:formContainers>
+
+											<f:FormContainer expandable="false">
+												<f:FormElement
+													id="MB_FORM_PURPOSE"
+													visible="true">
+													<f:label>
+														<Label
+															id="Trc_l_Purpose"
+															text="{i18n>TRC_PURPOSE}"
+															required="true">
+														</Label>
+													</f:label>
+													<f:fields>
+														<Input
+															id="Trc_I_Purpose"
+															type="Text"
+															showValueHelp="false"
+															value="{Purpose}">
+														</Input>
+													</f:fields>
+												</f:FormElement>
+
+												<f:FormElement
+													id="MB_FORM_ACTIVITY"													 	
+											 		visible="{ parts:[{path:'UserInfo>/GlobalSettings>/TripActivity'}] , formatter : '.checkGlobalSettingsTripActivity'}" >  	
+													<f:label>
+														<Label
+															id="Trc_l_Activity"
+															text="{i18n>TRC_ACTIVITY}"
+															required="true">
+														</Label>
+													</f:label>
+													<f:fields>
+														<Select
+															items="{TripActivities>/results}"
+															id="Trc_s_Activity"
+															selectedKey="{TripActivity}">
+															<core:Item
+																text="{TripActivities>Description}"
+																key="{TripActivities>ID}"></core:Item>
+														</Select>
+													</f:fields>
+												</f:FormElement>
+
+												<f:FormElement
+													id="MB_FORM_DATEFROM"
+													visible="true">
+													<f:label>
+														<Label
+															id="Trc_l_From"
+															text="{i18n>FROM}"
+															required="true">
+														</Label>
+													</f:label>
+													<f:fields>
+														<caui:DatePicker
+															id="Trc_D_From"
+															value="{path: 'Departure', type:'sap.ca.ui.model.type.Date', formatOptions: { style: 'medium'} }"
+															dateValue="{Departure}">
+														</caui:DatePicker>
+													</f:fields>
+												</f:FormElement>
+
+												<f:FormElement
+													id="MB_FORM_DATETO"
+													visible="true">
+													<f:label>
+														<Label
+															id="Trc_l_To"
+															text="{i18n>TO}"
+															required="true">
+														</Label>
+													</f:label>
+													<f:fields>
+														<caui:DatePicker
+															id="Trc_D_To"
+															value="{path: 'Arrival', type:'sap.ca.ui.model.type.Date', formatOptions: { style: 'medium'}}"
+															dateValue="{Arrival}">
+														</caui:DatePicker>
+													</f:fields>
+												</f:FormElement>
+
+												<f:FormElement
+													id="MB_FORM_DESTINATION"
+													visible="true">
+													<f:label>
+														<Label
+															id="Trc_l_Destination"
+															text="{i18n>TRC_DESTINATION}"
+															required="true">
+														</Label>
+													</f:label>
+													<f:fields>
+														<Input
+															id="Trc_SD_Destination"
+															value="{parts:[{path:'CountryName'},{path:'CountryCode'}], formatter:'travel.request.create.util.Formatters.formatNameWithId'}"
+															showValueHelp="true"
+															showSuggestion="true"
+															suggestionItems="{Destination>/results}"
+															valueHelpRequest="onDestinationValueHelpRequest"
+															suggestionItemSelected="onDestinationSuggestionItemSelected">
+															<suggestionItems>
+																<core:Item
+																	text="{parts:[{path:'Destination>Name'},{path:'Destination>Id'}], formatter:'travel.request.create.util.Formatters.formatNameWithId'}"></core:Item>
+															</suggestionItems>
+														</Input>
+													</f:fields>
+												</f:FormElement>
+												
+												<f:FormElement
+													id="MB_FORM_COUNTRY"
+													visible="false">
+													<f:label>
+														<Label
+															id="Trc_l_Country"
+															text="{i18n>TRC_COUNTRY}"
+															required="true">
+														</Label>
+													</f:label>
+													<f:fields>
+														<Input
+															id="Trc_SD_Country"
+															value="{parts:[{path:'CountryName'},{path:'CountryCode'}], formatter:'travel.request.create.util.Formatters.formatNameWithId'}"
+															showValueHelp="true"
+															showSuggestion="true"
+															suggestionItems="{Destination>/results}"
+															change="onCountryChange"
+															liveChange="onCountryLiveChange"
+															suggestionItemSelected="onCountrySuggestionItemSelected"
+															valueHelpRequest="onCountryValueHelpRequest">
+															<suggestionItems>
+																<core:Item
+																	text="{parts:[{path:'Destination>Name'},{path:'Destination>Id'}], formatter:'travel.request.create.util.Formatters.formatNameWithId'}"></core:Item>
+															</suggestionItems>
+														</Input>
+													</f:fields>
+												</f:FormElement>
+
+												<f:FormElement
+													id="MB_FORM_PER_DIEM_REGION"
+													visible="false">
+													<f:label>
+														<Label
+															id="Trc_l_Per_Diem_Region"
+															text="{i18n>TRC_PER_DIEM_REGION}"
+															required="false">
+														</Label>
+													</f:label>
+													<f:fields>
+														<Input
+															id="Trc_SD_PerDiemRegion"
+															value="{parts:[{path:'RegionName'},{path:'RegionCode'}], formatter:'travel.request.create.util.Formatters.formatNameWithId'}"
+															showValueHelp="true"
+															showSuggestion="true"
+															change="onPerDiemRegionChange"
+															liveChange="onPerDiemRegionLiveChange"
+															suggestionItemSelected="onPerDiemRegionSuggestionItemSelected"
+															suggest="onPerDiemRegionSuggest"
+															valueHelpRequest="onPerDiemRegionValueHelpRequest">
+														</Input>
+													</f:fields>
+												</f:FormElement>
+												
+												<f:FormElement
+													id="MB_FORM_CITY"
+													visible="true">
+													<f:label>
+														<Label
+															id="Trc_l_City"
+															text="{i18n>TRC_CITY}">
+														</Label>
+													</f:label>
+													<f:fields>
+														<Input
+															id="Trc_E_City"
+															type="Text"
+															showValueHelp="false"
+															value="{Location}">
+														</Input>
+													</f:fields>
+												</f:FormElement>
+
+
+												<f:FormElement
+													id="MB_FORM_COSTCURR"
+													visible="true">
+													<f:label>
+														<Label
+															id="Trc_l_Cost"
+															text="{i18n>TRC_LBL_COST}"
+															required="false">
+														</Label>
+													</f:label>
+													<f:fields>
+														<Input
+															id="Trc_E_Cost"
+															type="Text"
+															showValueHelp="false"
+															value="{EstimatedCost/Value}">
+														</Input>
+														<Input
+															id="Trc_SC_Currency"
+															value="{EstimatedCost/Currency}"
+															showValueHelp="true"
+															editable="{ parts:[{path:'UserInfo>/GlobalSettings>/FixedCurrency'}] , formatter : '.checkGlobalSettingsFixedCurrency'}" 															 
+															showSuggestion="true"													 
+															suggestionItems="{Currencies>/result}"
+															valueHelpRequest="onCurrencyValueHelpRequest">
+															<suggestionItems>
+																<core:Item text="{Currencies>Id}"></core:Item>
+															</suggestionItems>
+														</Input>
+													</f:fields>
+												</f:FormElement>
+
+												<f:FormElement
+													id="MB_FORM_APPROVER"													
+													visible="{path : 'UserInfo>/Approver', formatter : 'travel.request.create.util.Formatters.fieldVisible'}">
+													<f:label>
+														<Label
+															id="Trc_l_Manager"
+															text="{i18n>TRC_LBL_APPROVER}">
+														</Label>
+													</f:label>
+													<f:fields>
+														<Input
+															id="Trc_L_Manager"
+															type="Text"
+															showValueHelp="false"
+															value="{UserInfo>/Approver}"
+															editable="false">
+														</Input>
+													</f:fields>
+												</f:FormElement>
+
+												<f:FormElement
+													id="MB_FORM_NOTE"
+													visible="true">
+													<f:label>
+														<Label
+															id="Trc_l_Note"
+															text="{i18n>TRC_LBL_NOTE}">
+														</Label>
+													</f:label>
+													<f:fields>
+														<TextArea
+															id="Trc_L_Note"
+															value="{Note}"
+															wrapping="None">
+														</TextArea>
+													</f:fields>
+												</f:FormElement>
+
+
+											</f:FormContainer>
+										</f:formContainers>
+									</f:Form>
+								</l:content>
+							</l:Grid>
+						</f:content>
+					</f:SimpleForm>
+					
+					<!-- Additional Travel Request Form Data -->
+					<core:ExtensionPoint name="extAdditionalTravelRequestFormData"></core:ExtensionPoint>
+					
+					<f:SimpleForm
+						id="oCostAssignment"
+						maxContainerCols="1"
+						editable="true"
+						layout="ResponsiveGridLayout"
+						title="{i18n>TRC_LBL_COST_CENTER}"
+						class="editableForm">
+						<f:content>
+							<l:Grid
+								content="{CostAssignmentsModel>/}"
+								defaultSpan="L12 M12 S12"
+								minWidth="1024">
+								<l:content>
+									<f:Form
+										id="informationForm"
+										class="editableForm">
+										<f:layout>
+											<f:ResponsiveGridLayout
+												labelSpanL="3"
+												labelSpanM="3"
+												emptySpanL="4"
+												emptySpanM="4"
+												columnsL="1"
+												columnsM="1" />
+										</f:layout>
+										<f:formContainers title="{i18n>MB_INFORMATION}">
+
+											<f:FormContainer id="MB_LABEL_INFORMATION">
+												<f:FormElement
+													id="MB_FORM_TYPE"
+													visible="true">
+													<f:label>
+														<Label
+															visible="true"
+															id="Trc_l_Type"
+															text="{i18n>TYPE}"
+															required="true">
+														</Label>
+													</f:label>
+													<f:fields>
+														<Select
+															items="{costObjects>/}"
+															id="Trc_S_Type"
+															selectedKey="{CostAssignmentsModel>selectedCostObjectType}"
+															change="_onUpdateCostAssigment">
+															<core:Item
+																text="{costObjects>name}"
+																key="{costObjects>key}" />
+														</Select>
+													</f:fields>
+												</f:FormElement>
+
+
+												<f:FormElement
+													id="MB_FORM_TYPE_DESC"
+													visible="true">
+													<f:label>
+														<Label
+															id="Trc_l_Type_Desc"
+															labelFor="Trc_S_Type_Desc"
+															text="{i18n>DESCRIPTION}"
+															required="true">
+														</Label>
+													</f:label>
+													<f:fields>
+														<Input
+															id="Trc_S_Type_Desc"
+															value="{CostAssignmentsModel>selectedCostObjectDesc}"
+															showValueHelp="true"
+															valueHelpRequest="onCADescValueHelpRequest"
+															enabled="{CostAssignmentsModel>supported}">
+														</Input>
+													</f:fields>
+												</f:FormElement>
+
+
+												<f:FormElement
+													id="MB_FORM_ORDERITEM"
+													visible="{CostAssignmentsModel>displaySelectedCostObjectField}">
+													<f:label>
+														<Label
+															id="Trc_l_OrderItem"
+															labelFor="Trc_S_OrderItem"
+															text="{i18n>TRC_LBL_SALES_ORDER_ITEM}"
+															required="true">
+														</Label>
+													</f:label>
+													<f:fields>
+														<Input
+															id="Trc_S_OrderItem"
+															value="{CostAssignmentsModel>selectedSalesOrderItemDescription}"
+															showValueHelp="true"
+															valueHelpRequest="onOrderItemsValueHelpRequest">
+														</Input>
+													</f:fields>
+												</f:FormElement>
+
+
+												<f:FormElement
+													id="MB_FORM_PCT"
+													visible="true">
+													<f:label>
+														<Label
+															id="Trc_l_Pct"
+															labelFor="Trc_I_Pct"
+															text="{i18n>TRC_PERCENTAGE}"
+															required="true">
+														</Label>
+													</f:label>
+													<f:fields>
+														<Input
+															id="Trc_I_Pct"
+															type="Text"
+															value="{CostAssignmentsModel>percentage}"
+															showValueHelp="false">
+														</Input>
+													</f:fields>
+												</f:FormElement>
+
+												<f:FormElement
+													id="MB_FORM_BUTTON"
+													visible="true">
+													<f:label>
+														<Label>
+														</Label>
+													</f:label>
+													<f:fields>
+														<Button
+															id="TRC_BTN_ADD_COST_CENTER"
+															text="{i18n>TRC_ADD}"
+															tap="_onAddCostAssignment">
+														</Button>
+														<Button
+															id="TRC_BTN_REMOVE_COST_CENTER"
+															text="{i18n>TRC_REMOVE}"
+															tap="_onRemoveCostAssignment"
+															visible="{CostAssignmentsModel>removeDisplayed}">
+														</Button>
+													</f:fields>
+												</f:FormElement>
+
+											</f:FormContainer>
+										</f:formContainers>
+									</f:Form>
+								</l:content>
+							</l:Grid>
+						</f:content>
+					</f:SimpleForm>
+				</l:content>
+			</l:Grid>
+			<!-- <core:Title text="{i18n>TRC_COST_CENTER}"></core:Title> -->
+
+		</content>
+
+		<footer>
+			<Bar>
+
+			</Bar>
+		</footer>
+
+	</Page>
+</core:View>

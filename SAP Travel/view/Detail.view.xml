@@ -1,0 +1,179 @@
+<!--
+
+    Copyright (C) 2009-2014 SAP SE or an SAP affiliate company. All rights reserved
+
+-->
+<core:View
+	controllerName="travel.request.create.view.Detail"
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core"
+   	xmlns:form="sap.ui.layout.form"
+	xmlns:ui="sap.ca.ui" 
+	xmlns:f="sap.ui.layout.form">
+	<Page
+		title="{i18n>DETAIL_TITLE}"
+		class="sapUiFioriObjectPage">
+		<content>
+			<ObjectHeader
+				title="{Purpose}"
+				number="{path:'EstimatedCost/Value', type:'sap.ui.model.type.Float', formatOptions:{groupingEnabled:true}}"
+				numberUnit="{EstimatedCost/Currency}"
+				info="{path:'Status', formatter:'travel.request.create.util.Formatters.translateStatus'}"
+				state="{path:'Status', formatter:'travel.request.create.util.Formatters.formatStatus'}">
+				<firstStatus>
+					<ObjectStatus
+						text="{path:'Status', formatter:'travel.request.create.util.Formatters.translateStatus'}"
+						state="{path:'Status', formatter:'travel.request.create.util.Formatters.formatStatus'}">
+					</ObjectStatus>
+				</firstStatus>
+				<attributes>
+					<ObjectAttribute
+						id="ATTR1"
+						text="{parts:[{path:'Location'},{path:'CountryName'}], formatter:'travel.request.create.util.Formatters.formatDestination'}" />
+					<ObjectAttribute
+						id="ATTR2"
+						text="{parts:[{path:'Departure'},{path:'Arrival'}], formatter:'travel.request.create.util.Formatters.formatDepartureArrival'}" />
+				</attributes>
+			</ObjectHeader>
+
+			<IconTabBar
+				expandable="true"
+				id="TabContainer">
+				<items>
+					<IconTabFilter
+						icon="sap-icon://hint"
+						iconColor="Default"
+						key="Information">
+						<f:SimpleForm
+							id="bcTravelContainer"
+							maxContainerCols="1"
+							editable="false">
+							<f:content>
+								<Label text="{i18n>TRC_DURATION}"></Label>
+								<Label text="{i18n>TRC_ACTIVITY}"></Label>
+								<Text
+									id="TRC_TXT_ACTIVITY"
+									visible="{path : 'TripActivityName', formatter : 'travel.request.create.util.Formatters.fieldVisible'}"
+									text="{TripActivityName}" />
+
+								<Label text="{i18n>TRC_LBL_COST}" />
+								<Text
+									text="{parts:[{path:'EstimatedCost/Value'}, {path:'EstimatedCost/Currency'}], 
+									formatter:'travel.request.create.util.Formatters.formatAmountWithCurrency'}" />
+								<Label text="{i18n>TRC_LBL_APPROVER}" />
+								<Link
+									id="EmpLink"
+									text="{Approver}"
+									visible="{path : 'Approver', formatter : 'travel.request.create.util.Formatters.fieldVisible'}"
+									press="_handleApproverPress" />
+								<!-- Extension below the additional data -->
+								<core:ExtensionPoint name="extInfoAdditionalData"></core:ExtensionPoint>
+							</f:content>
+						</f:SimpleForm>
+					</IconTabFilter>
+						<IconTabFilter						
+						id="MultiNotesTab"
+						icon="sap-icon://notes"
+						iconColor="Default"
+						visible="{path : 'Note', formatter : '.isMultiCommentEnabled'}"
+						key="multiNotes">						
+						<form:SimpleForm editable="true"
+                                         layout="ResponsiveGridLayout"
+                                         labelSpanL="1"
+                                         labelSpanM="1"
+                                         emptySpanL="1"
+                                         emptySpanM="1"
+                                         columnsL="1"
+                                         columnsM="1"
+                                         id="notesForm"
+                                         class="tecFormFullWidthPhone"                                      
+                                         >
+                            <form:content>
+                                <ui:Notes showNoData="false" showNoteInput="false" growing="true" growingThreshold="5"  id="notesList" >
+                                </ui:Notes>
+                            </form:content>
+                        </form:SimpleForm>					
+	 					</IconTabFilter>					
+					<IconTabFilter
+						id="NotesTab"
+						icon="sap-icon://notes"
+						iconColor="Default"
+						visible="{path : 'Note', formatter : '.isSingleCommentEnabled'}"
+						count = "1"
+						key="Notes">
+						<FeedListItem
+							id="NoteTemplate"
+							icon="sap-icon://person-placeholder"
+							text="{Note}"
+							info="{i18n>SUBMISSION}"
+							timestamp="{path:'LastChangeDate', formatter:'travel.request.create.util.Formatters.formatDate'}"
+							sender="{parts:[{path:'UserInfo>/FirstName'},{path:'UserInfo>/LastName'}], formatter:'travel.request.create.util.Formatters.formatFirstNameLastName'}"
+							iconPress="_handleSenderPress"
+							senderPress="_handleSenderPress">
+						</FeedListItem>
+					</IconTabFilter>
+					<!-- Extension for additional tabs -->
+					<core:ExtensionPoint name="extTabs"></core:ExtensionPoint>
+				</items>
+			</IconTabBar>
+
+			<!-- Additional Travel Request Information -->
+			<core:ExtensionPoint name="extAdditionalTravelRequestInformation"></core:ExtensionPoint>
+			
+			<!-- Cost assignments -->
+			<Table
+				id="TRC_COSTASSIGNMENTS_TABLE"
+				items="{CostAssignments}"
+				noDataText="{i18n>LIST_NO_DATA}">
+				<columns>
+					<Column
+						hAlign="Left"
+						width="50%">
+						<header>
+							<Label text="{i18n>DESCRIPTION}" />
+						</header>
+					</Column>
+					<Column
+						hAlign="Left"
+						demandPopin="true"
+						minScreenWidth="Tablet">
+						<header>
+							<Label text="{i18n>TRC_TYPE}" />
+						</header>
+					</Column>
+					<Column
+						hAlign="Right"
+						width="20%">
+						<header>
+							<Label text="{i18n>TRC_PERCENTAGE}" />
+						</header>
+					</Column>
+				</columns>
+				<items>
+					<ColumnListItem>
+						<cells>
+							<ObjectIdentifier
+								id="TRC_TXT_COSTCENTER"
+								title="{parts:[{path:'CostObjectName'},{path:'CostObjectId'}], formatter:'travel.request.create.util.Formatters.formatCostDescription'}"
+								maxLines="0"></ObjectIdentifier>
+
+							<Text
+								id="TRC_TXT_COSTCOBJECT_TYPE"
+								text="{CostObjectType}"></Text>
+
+							<ObjectNumber
+								id="TRC_TXT_PERCENTAGE"
+								number="{Percentage}"
+								unit="%" />
+						</cells>
+					</ColumnListItem>
+				</items>
+			</Table>
+		</content>
+
+		<footer>
+			<Bar id="TRA_BAR_DETAIL">
+			</Bar>
+		</footer>
+	</Page>
+</core:View>
